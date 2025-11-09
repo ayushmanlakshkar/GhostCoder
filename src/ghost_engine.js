@@ -22,7 +22,7 @@ import { analyzeCodeWithAI, generateImprovedCode } from './openrouter_api.js';
 import { cloneRepository, createBranch, applyChanges, commitChanges, pushBranch } from './repo_manager.js';
 import { createPullRequest, getRepoInfo, addLabelsToPR, commentOnPR } from './github_api.js';
 import { buildSymbolGraph } from './symbolGraph.js';
-import { buildEmbeddingIndex, loadIndex, indexExists } from './embeddingIndex.js';
+import { buildEmbeddingIndex, loadIndex, indexExists, deleteIndex } from './embeddingIndex.js';
 import { retrieveContext, formatContextForAI, createCompactContext } from './contextRetriever.js';
 
 // Load environment variables
@@ -212,6 +212,10 @@ async function runGhostCoder(repoUrl, options = {}) {
         
         await deleteDirectory(tempRepoPath);
         
+        // Delete embedding index
+        log('Cleaning up embedding index...', 'info');
+        await deleteIndex(repoId);
+        
         return {
           ghost_name: 'GhostCoder',
           repo: `${owner}/${repo}`,
@@ -223,6 +227,11 @@ async function runGhostCoder(repoUrl, options = {}) {
       }
       
       await deleteDirectory(tempRepoPath);
+      
+      // Delete embedding index
+      log('Cleaning up embedding index...', 'info');
+      await deleteIndex(repoId);
+      
       return {
         ghost_name: 'GhostCoder',
         repo: `${owner}/${repo}`,
@@ -277,6 +286,11 @@ async function runGhostCoder(repoUrl, options = {}) {
     if (changes.length === 0) {
       log('No changes could be applied', 'warning');
       await deleteDirectory(tempRepoPath);
+      
+      // Delete embedding index
+      log('Cleaning up embedding index...', 'info');
+      await deleteIndex(repoId);
+      
       return {
         ghost_name: 'GhostCoder',
         repo: `${owner}/${repo}`,
@@ -321,6 +335,10 @@ async function runGhostCoder(repoUrl, options = {}) {
     
     // Step 16: Cleanup
     await deleteDirectory(tempRepoPath);
+    
+    // Step 16a: Delete embedding index to ensure fresh analysis next time
+    log('Cleaning up embedding index...', 'info');
+    await deleteIndex(repoId);
     
     // Step 17: Return summary
     const summary = {

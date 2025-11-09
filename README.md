@@ -2,7 +2,7 @@
 
 **Author:** Ayushman Lakshkar
 
-A fully autonomous AI-powered code review bot that uses **semantic indexing and embeddings** (similar to GitHub Copilot and Cursor) to intelligently analyze GitHub repositories, generate code improvements using AI, and create Pull Requests with the changes.
+A fully autonomous AI-powered code review bot that uses **semantic indexing and embeddings** to intelligently analyze GitHub repositories, generate code improvements using AI, and create Pull Requests with the changes.
 
 ---
 
@@ -26,7 +26,7 @@ GhostCoder now uses **advanced semantic indexing** instead of naive code dumping
 
 ---
 
-## �📖 What Does This Code Do?
+##  What Does This Code Do?
 
 GhostCoder is an intelligent automation tool that acts as your personal AI code reviewer. Here's what happens when you run it:
 
@@ -42,9 +42,35 @@ GhostCoder is an intelligent automation tool that acts as your personal AI code 
 10. **Commits changes** to a new branch
 11. **Pushes to GitHub** and **creates a Pull Request** automatically
 12. **Adds labels and comments** to the PR
-13. **Cleans up** temporary files
+13. **Cleans up** temporary files and embeddings
 
 All of this happens automatically with a single command! 🚀
+
+---
+
+## 🌐 REST API Server
+
+GhostCoder now includes a **REST API server** for frontend integration!
+
+### Quick Start
+```bash
+# Start the API server
+npm run api
+
+# Or in development mode with auto-reload
+npm run api:dev
+```
+
+### API Features
+- ✅ **Run GhostCoder analysis** with optional branch and path parameters
+- ✅ **Fetch all branches** for any GitHub repository
+- ✅ **Get user repositories** (all/public/private)
+- ✅ **Parse GitHub URLs** to extract owner and repo
+- ✅ **Get repository information**
+- ✅ **Automatic cleanup** - embeddings deleted after each PR
+- ✅ **CORS enabled** for frontend integration
+
+📚 **Full API Documentation:** See [API_README.md](./API_README.md) for detailed endpoint documentation and examples
 
 ---
 

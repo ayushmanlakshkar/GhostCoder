@@ -211,3 +211,90 @@ export async function listOpenPRs(owner, repo) {
     return [];
   }
 }
+
+/**
+ * List all branches for a repository
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @returns {Promise<Array>} List of branches
+ */
+export async function listBranches(owner, repo) {
+  try {
+    const token = process.env.GITHUB_TOKEN;
+    const octokit = new Octokit({ auth: token });
+    
+    const { data } = await octokit.repos.listBranches({
+      owner,
+      repo,
+      per_page: 100
+    });
+    
+    return data.map(branch => ({
+      name: branch.name,
+      commit: {
+        sha: branch.commit.sha,
+        url: branch.commit.url
+      },
+      protected: branch.protected
+    }));
+  } catch (error) {
+    log(`Failed to list branches: ${error.message}`, 'error');
+    throw error;
+  }
+}
+
+/**
+ * List repositories for authenticated user
+ * @param {Object} options - Options for listing repos
+ * @param {string} options.visibility - 'all', 'public', or 'private'
+ * @param {string} options.sort - Sort by 'created', 'updated', 'pushed', 'full_name'
+ * @param {string} options.direction - 'asc' or 'desc'
+ * @param {number} options.per_page - Results per page
+ * @param {number} options.page - Page number
+ * @returns {Promise<Array>} List of repositories
+ */
+export async function listUserRepos(options = {}) {
+  try {
+    const token = process.env.GITHUB_TOKEN;
+    const octokit = new Octokit({ auth: token });
+    
+    const {
+      visibility = 'all',
+      sort = 'updated',
+      direction = 'desc',
+      per_page = 30,
+      page = 1
+    } = options;
+    
+    const { data } = await octokit.repos.listForAuthenticatedUser({
+      visibility,
+      sort,
+      direction,
+      per_page,
+      page
+    });
+    
+    return data.map(repo => ({
+      id: repo.id,
+      name: repo.name,
+      fullName: repo.full_name,
+      owner: {
+        login: repo.owner.login,
+        avatar: repo.owner.avatar_url
+      },
+      description: repo.description,
+      private: repo.private,
+      htmlUrl: repo.html_url,
+      language: repo.language,
+      stargazersCount: repo.stargazers_count,
+      forksCount: repo.forks_count,
+      defaultBranch: repo.default_branch,
+      createdAt: repo.created_at,
+      updatedAt: repo.updated_at,
+      pushedAt: repo.pushed_at
+    }));
+  } catch (error) {
+    log(`Failed to list repositories: ${error.message}`, 'error');
+    throw error;
+  }
+}

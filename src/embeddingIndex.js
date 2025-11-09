@@ -356,8 +356,19 @@ export async function indexExists(repoId) {
 export async function deleteIndex(repoId) {
   try {
     const indexPath = path.join(INDEX_DIR, `${sanitizeRepoId(repoId)}.json`);
-    await fs.unlink(indexPath);
-    log(`Index deleted: ${indexPath}`, 'success');
+    
+    // Check if file exists before trying to delete
+    try {
+      await fs.access(indexPath);
+      await fs.unlink(indexPath);
+      log(`Index deleted: ${indexPath}`, 'success');
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        log(`Index file does not exist (already deleted or never created): ${indexPath}`, 'info');
+      } else {
+        throw error;
+      }
+    }
   } catch (error) {
     log(`Failed to delete index: ${error.message}`, 'warning');
   }
