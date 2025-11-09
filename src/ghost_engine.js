@@ -389,7 +389,7 @@ function createSyntaxFixPRBody(syntaxFixes) {
   syntaxFixes.forEach((fix, index) => {
     body += `${index + 1}. **${fix.filePath}**\n`;
     fix.fixes.forEach(f => {
-      body += `   - ${f}\n`;
+      body += `   - ${JSON.stringify(f.description)}\n`;
     });
     body += '\n';
   });
