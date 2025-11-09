@@ -1,0 +1,31 @@
+{
+  "name": "ghostcoder-backend",
+  "version": "1.0.0",
+  "description": "👻 Autonomous backend service that analyzes GitHub repos and creates AI-powered Pull Requests",
+  "main": "src/ghost_engine.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/ghost_engine.js",
+    "dev": "node --watch src/ghost_engine.js"
+  },
+  "keywords": [
+    "github",
+    "ai",
+    "automation",
+    "openrouter",
+    "pull-requests"
+  ],
+  "author": "Ayushman Lakshkar",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.23.6",
+    "@octokit/rest": "^20.0.2",
+    "@xenova/transformers": "^2.17.1",
+    "acorn": "^8.11.3",
+    "acorn-walk": "^8.3.2",
+    "axios": "^1.6.5",
+    "diff": "^8.0.2",
+    "dotenv": "^16.3.1",
+    "simple-git": "^3.22.0"
+  }
+}
